@@ -1,0 +1,23 @@
+# Sistema / editores
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.iml
+*.swp
+
+# Build e dependências
+node_modules/
+dist/
+out/
+target/
+*.class
+.venv/
+
+# Ambiente e segredos
+.env
+*.log
+
+# Material de terceiros (livros, planos de ensino, slides)
+Livro*.pdf
+Plano de Ensino*.pdf

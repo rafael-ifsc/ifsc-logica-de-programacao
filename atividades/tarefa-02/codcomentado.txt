@@ -1,0 +1,198 @@
+import java.util.Scanner;
+
+public class Main {
+
+    // --- SUBPROGRAMAS (Novidade da Atividade 2) ---
+    // Esse subprograma recebe o número do veículo (1, 2 ou 3) e devolve o texto
+    public static String obterDescricaoVeiculo(int tipo) {
+        if (tipo == 1) return "Pequeno (Popular)";
+        if (tipo == 2) return "Médio (SUV e Picape)";
+        if (tipo == 3) return "Grande (Van e Micro-ônibus)";
+        return "Desconhecido";
+    }
+
+    // Esse subprograma faz a mesma coisa, mas para o serviço
+    public static String obterDescricaoServico(int tipo) {
+        if (tipo == 1) return "Lavação externa";
+        if (tipo == 2) return "Lavação externa + interna";
+        if (tipo == 3) return "Lavação externa + interna + cera";
+        return "Desconhecido";
+    }
+    // ----------------------------------------------
+
+    public static void main(String[] args) {
+
+        // Mantive sua declaração de variáveis no início
+        int atendimentos, tipoveiculo, tiposervico, contador;
+        int veiculo1, veiculo2, veiculo3, servico1, servico2, servico3;
+        double valor, total;
+        String nomeCliente; // Variável temporária para leitura
+        Scanner leia;
+
+        // NOVAS VARIÁVEIS (Para atender a Atividade 2)
+        // Vetores para guardar os dados de TODOS os clientes
+        String[] vetorNomes;
+        int[] vetorTipoVeiculo;
+        int[] vetorTipoServico;
+        double[] vetorValores;
+
+        // Matriz para a tabela de preços (Linhas = Veículos, Colunas = Serviços)
+        double[][] matrizPrecos = {
+            {50.0, 70.0, 90.0},   // Linha 0 (Veículo 1)
+            {70.0, 90.0, 110.0},  // Linha 1 (Veículo 2)
+            {90.0, 110.0, 130.0}  // Linha 2 (Veículo 3)
+        };
+
+        // Variáveis para achar o maior (atividade pede isso)
+        int maiorQtdVeiculo, maiorQtdServico;
+        int tipoFiltro; // Para o relatório final
+
+        leia = new Scanner(System.in);
+        atendimentos = 0;
+        tipoveiculo = 0;
+        tiposervico = 0;
+        contador = 0; // Mudei para 0 para funcionar melhor com Vetores (que começam em 0)
+        veiculo1 = 0;
+        veiculo2 = 0;
+        veiculo3 = 0;
+        servico1 = 0;
+        servico2 = 0;
+        servico3 = 0;
+        valor = 0.0;
+        total = 0.0;
+        nomeCliente = "";
+
+        System.out.print("Informe a quantidade de atendimentos: ");
+        atendimentos = leia.nextInt();
+
+        // Inicializando os vetores com o tamanho que o usuário digitou
+        vetorNomes = new String[atendimentos];
+        vetorTipoVeiculo = new int[atendimentos];
+        vetorTipoServico = new int[atendimentos];
+        vetorValores = new double[atendimentos];
+
+        // Mudei a condição para < atendimentos porque vetor vai de 0 até (tamanho-1)
+        while (contador < atendimentos) {
+            System.out.println("\nAtendimento " + (contador + 1) + ":");
+
+            System.out.print("Nome do cliente: ");
+            leia.nextLine(); // Limpeza de buffer que você já usava
+            nomeCliente = leia.nextLine();
+            vetorNomes[contador] = nomeCliente; // Guardando no vetor
+
+            System.out.println("\nInforme o tipo de veículo: ");
+            System.out.println("1 - Pequeno (Popular)");
+            System.out.println("2 - Médio (SUV e Picape)");
+            System.out.println("3 - Grande (van e Micro-ônibus)");
+            System.out.print(" [ Digite 1, 2 ou 3 ] ");
+            tipoveiculo = leia.nextInt();
+
+            // Validação (Mantive sua lógica exata)
+            while (tipoveiculo < 1 || tipoveiculo > 3) {
+                System.out.println("Valor inválido! Tente novamente.");
+                tipoveiculo = leia.nextInt();
+            }
+            vetorTipoVeiculo[contador] = tipoveiculo; // Guardando no vetor
+
+            // Contagem para estatística
+            if (tipoveiculo == 1) veiculo1++;
+            else if (tipoveiculo == 2) veiculo2++;
+            else veiculo3++;
+
+            System.out.println("\nServiços: ");
+            System.out.println("1 - Lavação externa");
+            System.out.println("2 - Lavação externa + interna");
+            System.out.println("3 - Lavação externa + interna + cera");
+            System.out.print(" [ Digite 1, 2 ou 3 ] ");
+            tiposervico = leia.nextInt();
+
+            // Validação
+            while (tiposervico < 1 || tiposervico > 3) {
+                System.out.println("Valor inválido! Tente novamente.");
+                tiposervico = leia.nextInt();
+            }
+            vetorTipoServico[contador] = tiposervico; // Guardando no vetor
+
+            // Contagem para estatística
+            if (tiposervico == 1) servico1++;
+            else if (tiposervico == 2) servico2++;
+            else servico3++;
+
+            // --- CÁLCULO DO VALOR (USANDO A MATRIZ) ---
+            // Aqui substituímos aquele monte de IFs pela Matriz.
+            // Usamos -1 porque o usuário digita 1, 2, 3 mas a matriz é 0, 1, 2.
+            valor = matrizPrecos[tipoveiculo - 1][tiposervico - 1];
+            vetorValores[contador] = valor; // Guardando no vetor
+
+            // Saída imediata (usando os subprogramas para pegar o texto)
+            System.out.println("Nome: " + nomeCliente);
+            System.out.println("Categoria do veículo: " + obterDescricaoVeiculo(tipoveiculo));
+            System.out.println("Serviço: " + obterDescricaoServico(tiposervico));
+            System.out.println("Valor total R$ " + valor);
+
+            total += valor;
+            contador++;
+        }
+
+        // --- RELATÓRIOS FINAIS ---
+        
+        // 1. Relação Geral (Nova exigência: imprimir tudo no final usando os vetores)
+        System.out.println("\n=== RELAÇÃO GERAL DOS CLIENTES ===");
+        for (int i = 0; i < atendimentos; i++) {
+            System.out.println("Cliente: " + vetorNomes[i] + 
+                               " | Veículo: " + obterDescricaoVeiculo(vetorTipoVeiculo[i]) + 
+                               " | Serviço: " + obterDescricaoServico(vetorTipoServico[i]) + 
+                               " | Valor: R$ " + vetorValores[i]);
+        }
+
+        System.out.println("\nValor total arrecadado de hoje: R$ " + total);
+
+        System.out.println("\nPercentual por tipo de veículo:");
+        // Mantive seu printf, só adicionei o .0 para garantir a conta certa
+        System.out.printf("Pequeno: %.1f%%\n", (veiculo1 * 100.0 / atendimentos));
+        System.out.printf("Médio: %.1f%%\n", (veiculo2 * 100.0 / atendimentos));
+        System.out.printf("Grande: %.1f%%\n", (veiculo3 * 100.0 / atendimentos));
+
+        System.out.println("\nPercentual por tipo de serviço:");
+        System.out.printf("Serviço 1: %.1f%%\n", (servico1 * 100.0 / atendimentos));
+        System.out.printf("Serviço 2: %.1f%%\n", (servico2 * 100.0 / atendimentos));
+        System.out.printf("Serviço 3: %.1f%%\n", (servico3 * 100.0 / atendimentos));
+
+        // --- NOVAS ESTATÍSTICAS (Mais atendidos) ---
+        // Lógica simples para achar o maior veículo
+        maiorQtdVeiculo = veiculo1;
+        if (veiculo2 > maiorQtdVeiculo) maiorQtdVeiculo = veiculo2;
+        if (veiculo3 > maiorQtdVeiculo) maiorQtdVeiculo = veiculo3;
+
+        System.out.println("\nTipo(s) de veículo mais atendido(s):");
+        if (veiculo1 == maiorQtdVeiculo) System.out.println("- Pequeno (Popular)");
+        if (veiculo2 == maiorQtdVeiculo) System.out.println("- Médio (SUV e Picape)");
+        if (veiculo3 == maiorQtdVeiculo) System.out.println("- Grande (Van e Micro-ônibus)");
+
+        // Lógica simples para achar o maior serviço
+        maiorQtdServico = servico1;
+        if (servico2 > maiorQtdServico) maiorQtdServico = servico2;
+        if (servico3 > maiorQtdServico) maiorQtdServico = servico3;
+
+        System.out.println("\nTipo(s) de serviço mais atendido(s):");
+        if (servico1 == maiorQtdServico) System.out.println("- Lavação externa");
+        if (servico2 == maiorQtdServico) System.out.println("- Lavação externa + interna");
+        if (servico3 == maiorQtdServico) System.out.println("- Lavação externa + interna + cera");
+
+        // --- RELATÓRIO ESPECÍFICO (FILTRO) ---
+        // Nova exigência: pedir um tipo e mostrar só quem usou aquele tipo
+        System.out.println("\n=== CONSULTA POR TIPO DE VEÍCULO ===");
+        System.out.print("Digite o tipo para filtrar (1, 2 ou 3): ");
+        tipoFiltro = leia.nextInt();
+
+        System.out.println("Clientes com veículo tipo " + obterDescricaoVeiculo(tipoFiltro) + ":");
+        for (int i = 0; i < atendimentos; i++) {
+            // Se o tipo guardado no vetor for igual ao que o usuário pediu...
+            if (vetorTipoVeiculo[i] == tipoFiltro) {
+                System.out.println("- " + vetorNomes[i] + " | Valor: R$ " + vetorValores[i]);
+            }
+        }
+        
+        leia.close();
+    }
+}
